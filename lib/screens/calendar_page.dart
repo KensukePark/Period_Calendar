@@ -4,9 +4,10 @@ import 'package:table_calendar/table_calendar.dart';
 import '../class/event.dart';
 
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({Key? key, required this.period_list, required this.newest_day}) : super(key: key);
+  const CalendarPage({Key? key, required this.period_list, required this.newest_day, required this.newest_end_day}) : super(key: key);
   final period_list;
   final newest_day;
+  final newest_end_day;
   @override
   State<CalendarPage> createState() => _CalendarPageState();
 }
