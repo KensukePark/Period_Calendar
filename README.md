@@ -9,3 +9,4 @@ Dart 3.0.2 <br>
 
 # Preview
 <p align="left"><img src="main.png" width="288" height="624"/>
+<p align="left"><img src="period_temp_cal_page.png" width="288" height="624"/>
