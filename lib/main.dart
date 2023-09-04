@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import '../screens/home_page.dart';
+import '../screens/calendar_page.dart';
 import '../screens/loading_page.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 

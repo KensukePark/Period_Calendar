@@ -8,4 +8,4 @@ Flutter 3.10.2 <br>
 Dart 3.0.2 <br>
 
 # Preview
-<p align="left"><img src="main.png" width="225" height="400"/>
+<p align="left"><img src="main.png" width="288" height="624"/>

@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:period_calendar/screens/First_add_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'home_page.dart';
+import 'calendar_page.dart';
 
 class LoadingPage extends StatefulWidget {
   @override
@@ -14,15 +15,19 @@ class LoadingPage extends StatefulWidget {
 class _LoadingPage extends State<LoadingPage> {
   DateTime date_start = DateTime.now();
   DateTime date_end = DateTime.now();
+  var diff;
   void checkData() async {
     final prefs = await SharedPreferences.getInstance();
     //prefs.clear();
     final bool? check = prefs.getBool('check');
     sleep(Duration(seconds: 2));
     if (check != null) {
+      var period_list = prefs.getStringList('period');
+      var newest_day = prefs.getString('newest');
+      print(period_list);
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
           builder: (BuildContext context) =>
-              HomePage()), (route) => false);
+              CalendarPage(period_list: period_list, newest_day: newest_day,)), (route) => false);
     }
     else {
       showDialog(
@@ -77,12 +82,19 @@ class _LoadingPage extends State<LoadingPage> {
                       exit(0);
                     }
                     else {
-                      print(date_start);
-                      print(date_end);
+                      print(date_start.toString().substring(0,10));
+                      print(date_end.toString().substring(0,10));
+                      diff = date_end.difference(date_start);
+                      print(diff.inDays);
+                      prefs.setStringList('period', [DateFormat('yyyy-MM-dd').format(date_start), DateFormat('yyyy-MM-dd').format(date_end), diff.inDays.toString()]);
+                      prefs.setString('newest', DateFormat('yyyy-MM-dd').format(date_start));
                       prefs.setBool('check', true);
+                      prefs.setInt('num', 1);
+                      var period_list = prefs.getStringList('period');
+                      var newest_day = prefs.getString('newest');
                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              HomePage()), (route) => false);
+                              CalendarPage(period_list: period_list, newest_day: newest_day,)), (route) => false);
                     }
                   }
                 },
