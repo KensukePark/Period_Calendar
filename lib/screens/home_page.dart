@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:period_calendar/screens/calendar_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.period_list, required this.newest_day, required this.newest_end_day}) : super(key: key);
@@ -12,9 +13,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
   List<DateTime> predict_days = [];
   int left_days = 0;
   int cycle_days = 0;
+  String possibility = '';
+  bool day_check = false;
+  void CalPossible() {
+    if (left_days <= 16 && left_days >= 14) {
+      possibility = '높음';
+    }
+    else if (left_days <= 20 && left_days >= 9) {
+      possibility = '보통';
+    }
+    else {
+      possibility = '낮음';
+    }
+    if (left_days <= 19 && left_days >= 11) {
+      day_check = true;
+    }
+  }
   void CalDay(DateTime Newest_Date) {
     if (widget.period_list.length ~/ 3 == 1) {
       cycle_days = 28;
@@ -47,6 +65,7 @@ class _HomePageState extends State<HomePage> {
     int temp_newest_mon =int.parse(temp_newest_start.substring(5,7));
     int temp_newest_day =int.parse(temp_newest_start.substring(8,10));
     CalDay(DateTime.utc(temp_newest_year, temp_newest_mon, temp_newest_day));
+    CalPossible();
     super.initState();
   }
   Widget build(BuildContext context) {
@@ -69,39 +88,115 @@ class _HomePageState extends State<HomePage> {
                       radius: MediaQuery.of(context).size.width*0.25,
                       lineWidth: 6.0,
                       percent: (cycle_days-left_days)/cycle_days,
-                      center: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'D-${left_days}',
-                            style: TextStyle(
-                              fontSize: 32
+                      center: Container(
+                        padding: EdgeInsets.all(15),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'D-${left_days}',
+                              style: TextStyle(
+                                fontSize: 32
+                              ),
                             ),
-                          ),
-                          Divider(thickness: 2,),
-                          Text(
-                            '다음 생리일',
-                            style: TextStyle(
-                                fontSize: 16
+                            Divider(
+                              thickness: 2,
                             ),
-                          ),
-                          Text(
-                            DateFormat('yyyy.MM.dd').format(predict_days[0]),
-                            style: TextStyle(
-                                fontSize: 14
+                            Text(
+                              '다음 생리일',
+                              style: TextStyle(
+                                  fontSize: 16
+                              ),
                             ),
-                          ),
-                        ],
+                            Text(
+                              DateFormat('yyyy.MM.dd').format(predict_days[0]),
+                              style: TextStyle(
+                                  fontSize: 14
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       progressColor: const Color(0xFFF48FB1),
                     ),
                   ),
+                  const SizedBox(height: 40),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width*0.47-15,
+                          child: Column(
+                            children: [
+                              Text(
+                                '임신확률',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text(
+                                possibility,
+                                style: TextStyle(
+                                  fontSize: 24
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 60,
+                          child: VerticalDivider(thickness: 2,)
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width*0.47-15,
+                          child: Center(
+                            child: Text(
+                              day_check == true ? '가임기' : '비가임기',
+                              style: TextStyle(
+                                  fontSize: 24
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        iconSize: 24,
+        selectedItemColor: const Color(0xFFF48FB1),
+        unselectedItemColor: Colors.grey,
+        selectedLabelStyle: TextStyle(fontSize: 14),
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(icon: Icon(_currentIndex == 0 ? Icons.home : Icons.home_outlined), label: '홈'),
+          BottomNavigationBarItem(icon: Icon(_currentIndex == 1 ? Icons.saved_search : Icons.calendar_month), label: '달력'),
+          BottomNavigationBarItem(icon: Icon(_currentIndex == 2 ? Icons.favorite : Icons.bar_chart), label: '통계'),
+          BottomNavigationBarItem(icon: Icon(_currentIndex == 3 ? Icons.person : Icons.settings), label: '설정'),
+        ],
+        onTap: (int index){
+          setState(() {
+            _currentIndex = index;
+            if(index == 1){
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => CalendarPage(
+                period_list: widget.period_list, newest_day: widget.newest_day, newest_end_day: widget.newest_end_day,
+              )), (route) => false);
+            }
+            if(index == 2){
+
+            }
+            if(index == 3){
+
+            }
+          });
+        },
       ),
     );
   }
