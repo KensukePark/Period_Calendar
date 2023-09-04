@@ -19,7 +19,7 @@ class _LoadingPage extends State<LoadingPage> {
   var diff;
   void checkData() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.clear();
+    //prefs.clear(); //테스트용 생리 기록 초기화
     final bool? check = prefs.getBool('check');
     sleep(Duration(seconds: 2));
     if (check != null) {
