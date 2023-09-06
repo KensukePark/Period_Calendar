@@ -177,9 +177,9 @@ class _HomePageState extends State<HomePage> {
         currentIndex: _currentIndex,
         items: [
           BottomNavigationBarItem(icon: Icon(_currentIndex == 0 ? Icons.home : Icons.home_outlined), label: '홈'),
-          BottomNavigationBarItem(icon: Icon(_currentIndex == 1 ? Icons.saved_search : Icons.calendar_month), label: '달력'),
-          BottomNavigationBarItem(icon: Icon(_currentIndex == 2 ? Icons.favorite : Icons.bar_chart), label: '통계'),
-          BottomNavigationBarItem(icon: Icon(_currentIndex == 3 ? Icons.person : Icons.settings), label: '설정'),
+          BottomNavigationBarItem(icon: Icon(_currentIndex == 1 ? Icons.calendar_month : Icons.calendar_month_outlined), label: '달력'),
+          BottomNavigationBarItem(icon: Icon(_currentIndex == 2 ? Icons.bar_chart : Icons.bar_chart_outlined), label: '통계'),
+          BottomNavigationBarItem(icon: Icon(_currentIndex == 3 ? Icons.settings : Icons.settings_outlined), label: '설정'),
         ],
         onTap: (int index){
           setState(() {
