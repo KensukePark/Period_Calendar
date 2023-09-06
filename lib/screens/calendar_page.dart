@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:period_calendar/screens/home_page.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../class/event.dart';
 
@@ -13,6 +14,7 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
+  int _currentIndex = 1;
   List<DateTime> mark_days = [];
   List<dynamic> _selectedEvent = [];
   String for_print_selected_day = DateFormat('yyyy년 MM월 dd일').format(DateTime.now());
@@ -172,6 +174,36 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        iconSize: 24,
+        selectedItemColor: const Color(0xFFF48FB1),
+        unselectedItemColor: Colors.grey,
+        selectedLabelStyle: TextStyle(fontSize: 14),
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(icon: Icon(_currentIndex == 0 ? Icons.home : Icons.home_outlined), label: '홈'),
+          BottomNavigationBarItem(icon: Icon(_currentIndex == 1 ? Icons.calendar_month : Icons.calendar_month_outlined), label: '달력'),
+          BottomNavigationBarItem(icon: Icon(_currentIndex == 2 ? Icons.bar_chart : Icons.bar_chart_outlined), label: '통계'),
+          BottomNavigationBarItem(icon: Icon(_currentIndex == 3 ? Icons.settings : Icons.settings_outlined), label: '설정'),
+        ],
+        onTap: (int index){
+          setState(() {
+            _currentIndex = index;
+            if(index == 0){
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage(
+                period_list: widget.period_list, newest_day: widget.newest_day, newest_end_day: widget.newest_end_day,
+              )), (route) => false);
+            }
+            if(index == 2){
+
+            }
+            if(index == 3){
+
+            }
+          });
+        },
       ),
     );
   }
