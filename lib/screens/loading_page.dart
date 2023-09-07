@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:period_calendar/screens/First_add_page.dart';
+import 'package:period_calendar/screens/statistics_page.dart';
 import 'package:period_calendar/screens/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'calendar_page.dart';
@@ -17,15 +17,48 @@ class _LoadingPage extends State<LoadingPage> {
   DateTime date_start = DateTime.now();
   DateTime date_end = DateTime.now();
   var diff;
+  var period_list;
+  var newest_day;
+  var newest_end_day;
+  var target_day;
+  var compare_day;
+  void sort_period() {
+    for (int i=0; i<period_list.length-1; i=i+3) {
+      int target_idx = i;
+      int target_newest_year =int.parse(period_list[i].substring(0,4));
+      int target_newest_mon =int.parse(period_list[i].substring(5,7));
+      int target_newest_day =int.parse(period_list[i].substring(8,10));
+      target_day = int.parse(target_newest_year.toString() + target_newest_mon.toString() + target_newest_day.toString());
+      for (int j=i; j<period_list.length; j=j+3) {
+        int compare_newest_year =int.parse(period_list[j].substring(0,4));
+        int compare_newest_mon =int.parse(period_list[j].substring(5,7));
+        int compare_newest_day =int.parse(period_list[j].substring(8,10));
+        compare_day = int.parse(compare_newest_year.toString() + compare_newest_mon.toString() + compare_newest_day.toString());
+        if (compare_day < target_day) {
+          target_idx = j;
+        }
+      }
+      if (i != target_idx) {
+        var temp_1 = period_list[i];
+        var temp_2 = period_list[i+1];
+        var temp_3 = period_list[i+2];
+        period_list[i] = period_list[target_idx];
+        period_list[i+1] = period_list[target_idx+1];
+        period_list[i+2] = period_list[target_idx+2];
+        period_list[target_idx] = temp_1;
+        period_list[target_idx+1] = temp_2;
+        period_list[target_idx+2] = temp_3;
+      }
+    }
+  }
   void checkData() async {
     final prefs = await SharedPreferences.getInstance();
     //prefs.clear(); //테스트용 생리 기록 초기화
     final bool? check = prefs.getBool('check');
-    sleep(Duration(seconds: 2));
     if (check != null) {
-      var period_list = prefs.getStringList('period');
-      var newest_day = prefs.getString('newest');
-      var newest_end_day = prefs.getString('newest_end');
+      period_list = prefs.getStringList('period');
+      newest_day = prefs.getString('newest');
+      newest_end_day = prefs.getString('newest_end');
       //print(period_list);
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
           builder: (BuildContext context) =>
@@ -112,6 +145,7 @@ class _LoadingPage extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
+    sleep(Duration(seconds: 2));
     checkData();
   }
   @override

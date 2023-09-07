@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:period_calendar/screens/home_page.dart';
+import 'package:period_calendar/screens/statistics_page.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../class/event.dart';
 
@@ -86,7 +87,7 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Diary'),
+        title: Text('My Calendar'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -197,7 +198,9 @@ class _CalendarPageState extends State<CalendarPage> {
               )), (route) => false);
             }
             if(index == 2){
-
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Stats_page(
+                period_list: widget.period_list, newest_day: widget.newest_day, newest_end_day: widget.newest_end_day,
+              )), (route) => false);
             }
             if(index == 3){
 

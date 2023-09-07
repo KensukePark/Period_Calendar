@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:period_calendar/screens/calendar_page.dart';
+import 'package:period_calendar/screens/statistics_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.period_list, required this.newest_day, required this.newest_end_day}) : super(key: key);
@@ -19,6 +21,19 @@ class _HomePageState extends State<HomePage> {
   int cycle_days = 0;
   String possibility = '';
   bool day_check = false;
+  var period_list;
+  var newest_day;
+  var newest_end_day;
+  void load_data() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      period_list = prefs.getStringList('period');
+      newest_day = prefs.getString('newest');
+      newest_end_day = prefs.getString('newest_end');
+      cycle_days = prefs.getInt('cycle_days')!;
+    });
+  }
+
   void CalPossible() {
     if (left_days <= 16 && left_days >= 14) {
       possibility = '높음';
@@ -33,7 +48,7 @@ class _HomePageState extends State<HomePage> {
       day_check = true;
     }
   }
-  void CalDay(DateTime Newest_Date) {
+  void CalDay(DateTime Newest_Date) async {
     if (widget.period_list.length ~/ 3 == 1) {
       cycle_days = 28;
       int temp =  int.parse(widget.period_list[2]);
@@ -57,6 +72,8 @@ class _HomePageState extends State<HomePage> {
     int temp_newest_day =int.parse(temp_newest_start.substring(8,10));
     print(predict_days[0]);
     left_days = predict_days[0].difference(DateTime.utc(temp_newest_year, temp_newest_mon, temp_newest_day)).inDays;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt('cycle_days', cycle_days);
   }
   @override
   void initState() {
@@ -190,7 +207,9 @@ class _HomePageState extends State<HomePage> {
               )), (route) => false);
             }
             if(index == 2){
-
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Stats_page(
+                period_list: widget.period_list, newest_day: widget.newest_day, newest_end_day: widget.newest_end_day,
+              )), (route) => false);
             }
             if(index == 3){
 
