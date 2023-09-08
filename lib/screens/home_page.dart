@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   List<String> period_list = [];
   var newest_day;
   var newest_end_day;
+  int temp = 0;
   void load_data() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -51,24 +52,22 @@ class _HomePageState extends State<HomePage> {
   void CalDay(DateTime Newest_Date) {
     if (widget.period_list.length == 3) {
       cycle_days = 28;
-      int temp =  int.parse(widget.period_list[2]);
-      for (int i = 0; i <= temp; i++) {
+      temp = int.parse(widget.period_list[2]);
+      int temp_range =  int.parse(widget.period_list[2]);
+      for (int i = 0; i <= temp_range; i++) {
         predict_days.add(Newest_Date.add(Duration(days: 28+i)));
       }
     }
     else {
       cycle_days = 0;
-      int temp = 0;
+      temp = 0;
       print(widget.period_list);
       for (int j = 2; j < widget.period_list.length; j = j+3) {
         print(widget.period_list[j]);
         temp = temp + int.parse(widget.period_list[j]);
       }
       temp = (temp / (widget.period_list.length ~/ 3)).round(); //평균 생리기간
-      print('temp =  ${temp}');
-      for (int i = 0; i <= temp; i++) {
-        predict_days.add(Newest_Date.add(Duration(days: 28+i)));
-      }
+      //print('temp =  ${temp}');
       for (int k = 0; k < widget.period_list.length ~/ 3 - 1; k++) {
         cycle_days = cycle_days + DateTime.utc(
             int.parse(widget.period_list[3*k].substring(0,4)),
@@ -83,6 +82,9 @@ class _HomePageState extends State<HomePage> {
         ).inDays;
       }
       cycle_days = (cycle_days / (widget.period_list.length ~/ 3 - 1)).round();
+      for (int i = 0; i <= temp; i++) {
+        predict_days.add(Newest_Date.add(Duration(days: cycle_days+i)));
+      }
       print('생리 지속일 : ${cycle_days}');
       print('생리 다음 주기 : ${temp}');
     }
@@ -90,7 +92,7 @@ class _HomePageState extends State<HomePage> {
     int temp_newest_year =int.parse(temp_newest_start.substring(0,4));
     int temp_newest_mon =int.parse(temp_newest_start.substring(5,7));
     int temp_newest_day =int.parse(temp_newest_start.substring(8,10));
-    left_days = predict_days[0].difference(DateTime.utc(temp_newest_year, temp_newest_mon, temp_newest_day)).inDays;
+    left_days = predict_days[0].difference(DateTime.now()).inDays;
   }
   @override
   void initState() {

@@ -20,6 +20,8 @@ class _CalendarPageState extends State<CalendarPage> {
   List<dynamic> _selectedEvent = [];
   String for_print_selected_day = DateFormat('yyyy년 MM월 dd일').format(DateTime.now());
   String for_print_explain = '';
+  int temp_dur = 0;
+  int temp_per = 0;
   void FindBetweenDay(DateTime startDate, DateTime endDate) {
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
       mark_days.add(startDate.add(Duration(days: i)));
@@ -32,6 +34,8 @@ class _CalendarPageState extends State<CalendarPage> {
       for (int i = 0; i <= temp_days; i++) {
         predict_days.add(Newest_Date.add(Duration(days: 28+i)));
       }
+      temp_dur = temp_days; //한번 생리 지속일
+      temp_per = 28; //다음 생리까지
     }
     else {
       int temp_days = 0; //평균 생리 지속일
@@ -57,6 +61,8 @@ class _CalendarPageState extends State<CalendarPage> {
       for (int i = 0; i <= temp_days; i++) {
         predict_days.add(Newest_Date.add(Duration(days: temp_cycle+i)));
       }
+      temp_dur = temp_days; //한번 생리 지속일
+      temp_per = temp_cycle; //다음 생리까지
     }
   }
   Map<DateTime, List<Event>> events = {};
@@ -83,7 +89,6 @@ class _CalendarPageState extends State<CalendarPage> {
       int temp_end_day =int.parse(temp_end.substring(8,10));
       FindBetweenDay(DateTime.utc(temp_start_year, temp_start_mon, temp_start_day),
         DateTime.utc(temp_end_year, temp_end_mon, temp_end_day));
-
     }
     for (int j=0; j<mark_days.length; j++) {
       events[mark_days[j]] = [Event('생리일')];

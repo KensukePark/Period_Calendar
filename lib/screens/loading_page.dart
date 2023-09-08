@@ -59,10 +59,6 @@ class _LoadingPage extends State<LoadingPage> {
       period_list = prefs.getStringList('period');
       newest_day = prefs.getString('newest');
       newest_end_day = prefs.getString('newest_end');
-      print(period_list);
-      print(newest_day);
-      print(newest_end_day);
-
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
           builder: (BuildContext context) =>
               HomePage(period_list: period_list, newest_day: newest_day, newest_end_day: newest_end_day,)), (route) => false);
@@ -124,7 +120,7 @@ class _LoadingPage extends State<LoadingPage> {
                       print(date_end.toString().substring(0,10));
                       diff = date_end.difference(date_start);
                       print(diff.inDays);
-                      prefs.setStringList('period', [DateFormat('yyyy-MM-dd').format(date_start), DateFormat('yyyy-MM-dd').format(date_end), diff.inDays.toString()]);
+                      prefs.setStringList('period', [DateFormat('yyyy-MM-dd').format(date_start), DateFormat('yyyy-MM-dd').format(date_end), (diff.inDays+1).toString()]);
                       prefs.setString('newest', DateFormat('yyyy-MM-dd').format(date_start));
                       prefs.setString('newest_end', DateFormat('yyyy-MM-dd').format(date_end));
                       prefs.setBool('check', true);
