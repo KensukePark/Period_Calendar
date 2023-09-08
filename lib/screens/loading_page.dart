@@ -59,7 +59,10 @@ class _LoadingPage extends State<LoadingPage> {
       period_list = prefs.getStringList('period');
       newest_day = prefs.getString('newest');
       newest_end_day = prefs.getString('newest_end');
-      //print(period_list);
+      print(period_list);
+      print(newest_day);
+      print(newest_end_day);
+
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
           builder: (BuildContext context) =>
               HomePage(period_list: period_list, newest_day: newest_day, newest_end_day: newest_end_day,)), (route) => false);

@@ -21,13 +21,13 @@ class _HomePageState extends State<HomePage> {
   int cycle_days = 0;
   String possibility = '';
   bool day_check = false;
-  var period_list;
+  List<String> period_list = [];
   var newest_day;
   var newest_end_day;
   void load_data() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      period_list = prefs.getStringList('period');
+      period_list = prefs.getStringList('period')!;
       newest_day = prefs.getString('newest');
       newest_end_day = prefs.getString('newest_end');
       cycle_days = prefs.getInt('cycle_days')!;
@@ -48,8 +48,8 @@ class _HomePageState extends State<HomePage> {
       day_check = true;
     }
   }
-  void CalDay(DateTime Newest_Date) async {
-    if (widget.period_list.length ~/ 3 == 1) {
+  void CalDay(DateTime Newest_Date) {
+    if (widget.period_list.length == 3) {
       cycle_days = 28;
       int temp =  int.parse(widget.period_list[2]);
       for (int i = 0; i <= temp; i++) {
@@ -58,29 +58,48 @@ class _HomePageState extends State<HomePage> {
     }
     else {
       cycle_days = 0;
+      int temp = 0;
+      print(widget.period_list);
       for (int j = 2; j < widget.period_list.length; j = j+3) {
-        cycle_days = cycle_days + int.parse(widget.period_list[j]);
+        print(widget.period_list[j]);
+        temp = temp + int.parse(widget.period_list[j]);
       }
-      cycle_days = (cycle_days / (int.parse(widget.period_list.length) / 3)).round(); //평균 생리기간
-      for (int i = 0; i <= cycle_days; i++) {
+      temp = (temp / (widget.period_list.length ~/ 3)).round(); //평균 생리기간
+      print('temp =  ${temp}');
+      for (int i = 0; i <= temp; i++) {
         predict_days.add(Newest_Date.add(Duration(days: 28+i)));
       }
+      for (int k = 0; k < widget.period_list.length ~/ 3 - 1; k++) {
+        cycle_days = cycle_days + DateTime.utc(
+            int.parse(widget.period_list[3*k].substring(0,4)),
+            int.parse(widget.period_list[3*k].substring(5,7)),
+            int.parse(widget.period_list[3*k].substring(8,10))
+        ).difference(
+            DateTime.utc(
+                int.parse(widget.period_list[3*(k+1)].substring(0,4)),
+                int.parse(widget.period_list[3*(k+1)].substring(5,7)),
+                int.parse(widget.period_list[3*(k+1)].substring(8,10))
+            )
+        ).inDays;
+      }
+      cycle_days = (cycle_days / (widget.period_list.length ~/ 3 - 1)).round();
+      print('생리 지속일 : ${cycle_days}');
+      print('생리 다음 주기 : ${temp}');
     }
     String temp_newest_start = widget.newest_end_day;
     int temp_newest_year =int.parse(temp_newest_start.substring(0,4));
     int temp_newest_mon =int.parse(temp_newest_start.substring(5,7));
     int temp_newest_day =int.parse(temp_newest_start.substring(8,10));
-    print(predict_days[0]);
     left_days = predict_days[0].difference(DateTime.utc(temp_newest_year, temp_newest_mon, temp_newest_day)).inDays;
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setInt('cycle_days', cycle_days);
   }
   @override
   void initState() {
+    print('this is ok');
     String temp_newest_start = widget.newest_day;
     int temp_newest_year =int.parse(temp_newest_start.substring(0,4));
     int temp_newest_mon =int.parse(temp_newest_start.substring(5,7));
     int temp_newest_day =int.parse(temp_newest_start.substring(8,10));
+    load_data();
     CalDay(DateTime.utc(temp_newest_year, temp_newest_mon, temp_newest_day));
     CalPossible();
     super.initState();

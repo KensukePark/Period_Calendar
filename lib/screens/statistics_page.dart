@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -21,10 +22,12 @@ class _Stats_page extends State<Stats_page> {
   bool extended = false;
   int _currentIndex = 2;
   late DateTime date;
-  var period_list = [];
+  List<String> period_list = [];
   var newest_day = '';
   var newest_end_day = '';
   int cycle_means = 0;
+  DateTime date_start = DateTime.now();
+  DateTime date_end = DateTime.now();
   void load_data() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -32,7 +35,85 @@ class _Stats_page extends State<Stats_page> {
       newest_day = prefs.getString('newest')!;
       newest_end_day = prefs.getString('newest_end')!;
       cycle_means = prefs.getInt('cycle_days')!;
+      print(cycle_means);
     });
+  }
+  void addData() async {
+    final prefs = await SharedPreferences.getInstance();
+    //prefs.clear(); //테스트용 생리 기록 초기화
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            '데이터가 필요합니다.',
+            style: TextStyle(fontSize: 16,),
+          ),
+          content: SingleChildScrollView(child:new Text("가장 최근 생리 시작일과 종료일을 입력해주세요.")),
+          actions: <Widget>[
+            new TextButton(
+              child: new Text("확인"),
+              onPressed: () async {
+                final selectedDate = await showDatePicker(
+                  context: context,
+                  initialDate: date_start,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime.now(),
+                  helpText: '최근 생리 시작일',
+                  cancelText: '종료',
+                  confirmText: '선택',
+                  initialEntryMode: DatePickerEntryMode.calendarOnly,
+                );
+                if (selectedDate != null) {
+                  setState(() {
+                    date_start = selectedDate;
+                  });
+                }
+                if (selectedDate == null) {
+                }
+                else {
+                  final selectedDate_end = await showDatePicker(
+                    context: context,
+                    initialDate: date_start,
+                    firstDate: date_start,
+                    lastDate: DateTime.now(),
+                    helpText: '최근 생리 종료일',
+                    cancelText: '종료',
+                    confirmText: '선택',
+                    initialEntryMode: DatePickerEntryMode.calendarOnly,
+                  );
+                  if (selectedDate_end != null) {
+                    setState(() {
+                      date_end = selectedDate_end;
+                    });
+                  }
+                  if (selectedDate_end == null) {
+                  }
+                  else {
+                    print(date_start.toString().substring(0,10));
+                    print(date_end.toString().substring(0,10));
+                    var diff = date_end.difference(date_start);
+                    print(diff.inDays);
+                    period_list.add(DateFormat('yyyy-MM-dd').format(date_start));
+                    period_list.add(DateFormat('yyyy-MM-dd').format(date_end));
+                    period_list.add(diff.inDays.toString());
+                    prefs.setStringList('period', period_list);
+                    prefs.setInt('num', 1);
+                    period_list = prefs.getStringList('period')!;
+                    newest_day = prefs.getString('newest')!;
+                    newest_end_day = prefs.getString('newest_end')!;
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            HomePage(period_list: period_list, newest_day: newest_day, newest_end_day: newest_end_day,)), (route) => false);
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
   @override
   void initState() {
@@ -116,9 +197,9 @@ class _Stats_page extends State<Stats_page> {
                                         int.parse(period_list[3*index].substring(8,10))
                                     ).difference(
                                         DateTime.utc(
-                                            int.parse(period_list[3*(index+1)+1].substring(0,4)),
-                                            int.parse(period_list[3*(index+1)+1].substring(5,7)),
-                                            int.parse(period_list[3*(index+1)+1].substring(8,10))
+                                            int.parse(period_list[3*(index+1)].substring(0,4)),
+                                            int.parse(period_list[3*(index+1)].substring(5,7)),
+                                            int.parse(period_list[3*(index+1)].substring(8,10))
                                         )
                                     ).inDays / 35) + MediaQuery.of(context).size.width * 0.25,
                                 child: Center(
@@ -130,9 +211,9 @@ class _Stats_page extends State<Stats_page> {
                                         int.parse(period_list[3*index].substring(8,10))
                                     ).difference(
                                         DateTime.utc(
-                                            int.parse(period_list[3*(index+1)+1].substring(0,4)),
-                                            int.parse(period_list[3*(index+1)+1].substring(5,7)),
-                                            int.parse(period_list[3*(index+1)+1].substring(8,10))
+                                            int.parse(period_list[3*(index+1)].substring(0,4)),
+                                            int.parse(period_list[3*(index+1)].substring(5,7)),
+                                            int.parse(period_list[3*(index+1)].substring(8,10))
                                         )
                                     ).inDays.toString(),
                                   ),
@@ -194,6 +275,7 @@ class _Stats_page extends State<Stats_page> {
       onPressed: () {
         setState(() {
           extended = !extended;
+          addData();
         });
       },
       label: const Text("Click"),
@@ -206,7 +288,7 @@ class _Stats_page extends State<Stats_page> {
 
       /// 텍스트 컬러
       foregroundColor: Colors.white,
-      backgroundColor: Colors.red,
+      backgroundColor: const Color(0xFFF48FB1),
     );
   }
 }

@@ -27,20 +27,35 @@ class _CalendarPageState extends State<CalendarPage> {
   }
   List<DateTime> predict_days = [];
   void PredictDay(DateTime Newest_Date) {
-    if (widget.period_list.length ~/ 3 == 1) {
+    if (widget.period_list.length == 3) {
       int temp_days = int.parse(widget.period_list[2]);
       for (int i = 0; i <= temp_days; i++) {
         predict_days.add(Newest_Date.add(Duration(days: 28+i)));
       }
     }
     else {
-      int temp_days = 0;
+      int temp_days = 0; //평균 생리 지속일
       for (int j = 2; j < widget.period_list.length; j = j+3) {
         temp_days = temp_days + int.parse(widget.period_list[j]);
       }
-      temp_days = (temp_days / (int.parse(widget.period_list.length) / 3)).round(); //평균 생리기간
+      temp_days = (temp_days / (widget.period_list.length / 3)).round();
+      int temp_cycle = 0; //평균 다음 생리까지의 소요일
+      for (int k = 0; k < widget.period_list.length ~/ 3 - 1; k++) {
+        temp_cycle = temp_cycle + DateTime.utc(
+            int.parse(widget.period_list[3*k].substring(0,4)),
+            int.parse(widget.period_list[3*k].substring(5,7)),
+            int.parse(widget.period_list[3*k].substring(8,10))
+        ).difference(
+            DateTime.utc(
+                int.parse(widget.period_list[3*(k+1)].substring(0,4)),
+                int.parse(widget.period_list[3*(k+1)].substring(5,7)),
+                int.parse(widget.period_list[3*(k+1)].substring(8,10))
+            )
+        ).inDays;
+      }
+      temp_cycle = (temp_cycle / (widget.period_list.length ~/ 3 - 1)).round();
       for (int i = 0; i <= temp_days; i++) {
-        predict_days.add(Newest_Date.add(Duration(days: 28+i)));
+        predict_days.add(Newest_Date.add(Duration(days: temp_cycle+i)));
       }
     }
   }
