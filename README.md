@@ -9,5 +9,8 @@ Dart 3.0.2 <br>
 
 # Preview
 <p align="left"><img src="main.png" width="288" height="624"/>
-<img src="period_temp_cal_page.png" width="288" height="624"/></p>
+<img src="home_temp_01.png" width="288" height="624"/>
+<img src="cal_temp_01.png" width="288" height="624"/>
+<img src="stat_temp_01.png" width="288" height="624"/>
+</p>
 
