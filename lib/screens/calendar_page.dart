@@ -109,94 +109,116 @@ class _CalendarPageState extends State<CalendarPage> {
       appBar: AppBar(
         title: Text('My Calendar'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TableCalendar(
-              locale: 'ko_KR',
-              firstDay: DateTime.utc(1900, 1, 1),
-              lastDay: DateTime.utc(2037, 12, 31),
-              focusedDay: focusedDay,
-              headerStyle: HeaderStyle(
-                formatButtonVisible: false,
-                titleCentered: true,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
               ),
-              //rangeStartDay: DateFormat('yyyy-MM-dd').parse(widget.period_list[0]),
-              //rangeEndDay: DateFormat('yyyy-MM-dd').parse(widget.period_list[1]),
-              eventLoader: _getEventsForDay,
-              onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-                setState((){
-                  this.selectedDay = selectedDay;
-                  this.focusedDay = focusedDay;
-                  for_print_selected_day = DateFormat('yyyy년 MM월 dd일').format(selectedDay);
-                  if (_getEventsForDay(selectedDay).length != 0) {
-                    print(_getEventsForDay(selectedDay)[0].title);
-                    for_print_explain = _getEventsForDay(selectedDay)[0].title;
-                  }
-                  else {
-                    for_print_explain = '';
-                  }
-                });
-              },
-              selectedDayPredicate: (DateTime day) {
-                return isSameDay(selectedDay, day);
-              },
-              calendarStyle: CalendarStyle(
-                outsideDaysVisible : false,
-                isTodayHighlighted : false,
-                rangeStartDecoration: BoxDecoration(
-                  color : const Color(0xFFF48FB1),
-                  shape: BoxShape.circle,
-                ),
-                rangeEndDecoration: BoxDecoration(
-                  color: const Color(0xFFF48FB1),
-                  shape: BoxShape.circle,
-                ),
-                rangeHighlightColor: const Color(0xFFF48FB1),
-                todayDecoration: BoxDecoration(
-                  color: Colors.blueAccent,
-                  shape: BoxShape.circle,
-                ),
-                selectedDecoration : const BoxDecoration(
-                  color: const Color(0xFFB2EBF2),
-                  shape: BoxShape.circle,
-                ),
-                markerSizeScale : 0.15,
-                //markersAlignment : Alignment.topCenter,
-                markerDecoration : const BoxDecoration(
-                  color: const Color(0xFFF48FB1),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-            const Divider(height: 2),
-            Container(
-              padding: EdgeInsets.all(15),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    for_print_selected_day,
-                    style: TextStyle(
-                      fontSize: 16,
+                  SizedBox(height: 10,),
+                  TableCalendar(
+                    locale: 'ko_KR',
+                    firstDay: DateTime.utc(1900, 1, 1),
+                    lastDay: DateTime.utc(2037, 12, 31),
+                    focusedDay: focusedDay,
+                    headerStyle: HeaderStyle(
+                      formatButtonVisible: false,
+                      titleCentered: true,
+                    ),
+                    //rangeStartDay: DateFormat('yyyy-MM-dd').parse(widget.period_list[0]),
+                    //rangeEndDay: DateFormat('yyyy-MM-dd').parse(widget.period_list[1]),
+                    eventLoader: _getEventsForDay,
+                    onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+                      setState((){
+                        this.selectedDay = selectedDay;
+                        this.focusedDay = focusedDay;
+                        for_print_selected_day = DateFormat('yyyy년 MM월 dd일').format(selectedDay);
+                        if (_getEventsForDay(selectedDay).length != 0) {
+                          print(_getEventsForDay(selectedDay)[0].title);
+                          for_print_explain = _getEventsForDay(selectedDay)[0].title;
+                        }
+                        else {
+                          for_print_explain = '';
+                        }
+                      });
+                    },
+                    selectedDayPredicate: (DateTime day) {
+                      return isSameDay(selectedDay, day);
+                    },
+                    calendarStyle: CalendarStyle(
+                      outsideDaysVisible : false,
+                      isTodayHighlighted : false,
+                      rangeStartDecoration: BoxDecoration(
+                        color : const Color(0xFFF48FB1),
+                        shape: BoxShape.circle,
+                      ),
+                      rangeEndDecoration: BoxDecoration(
+                        color: const Color(0xFFF48FB1),
+                        shape: BoxShape.circle,
+                      ),
+                      rangeHighlightColor: const Color(0xFFF48FB1),
+                      todayDecoration: BoxDecoration(
+                        color: Colors.blueAccent,
+                        shape: BoxShape.circle,
+                      ),
+                      selectedDecoration : const BoxDecoration(
+                        color: const Color(0xFFB2EBF2),
+                        shape: BoxShape.circle,
+                      ),
+                      markerSizeScale : 0.15,
+                      //markersAlignment : Alignment.topCenter,
+                      markerDecoration : const BoxDecoration(
+                        color: const Color(0xFFF48FB1),
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   ),
-                  SizedBox(height: 25,),
-                  Text(
-                    for_print_explain,
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
+                  SizedBox(height: 20,),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Container(
+                padding: EdgeInsets.all(10),
+                width: MediaQuery.of(context).size.width - 20,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      for_print_selected_day,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(height: 25,),
+                    Text(
+                      for_print_explain,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
         iconSize: 24,
         selectedItemColor: const Color(0xFFF48FB1),
