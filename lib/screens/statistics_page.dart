@@ -31,8 +31,8 @@ class _Stats_page extends State<Stats_page> {
   var diff;
   var target_day;
   var compare_day;
-  int cycle_days = 0;
-  int dur_days = 0;
+  int cycle_days = 0; //평균 생리 주기 (다음번 생리까지의 소요일)
+  int dur_days = 0; //평균 생리 기간 (지속일)
   void load_data() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -55,7 +55,6 @@ class _Stats_page extends State<Stats_page> {
       dur_days =
           (dur_days / ((widget.period_list.length ~/ 3) - 1)).round(); //평균 생리기간
 
-      print('cycle days calcul result : ${cycle_days}');
       for (int k = 0; k < widget.period_list.length ~/ 3 - 1; k++) {
         cycle_days = cycle_days + DateTime.utc(
             int.parse(widget.period_list[3*k].substring(0,4)),
@@ -83,6 +82,7 @@ class _Stats_page extends State<Stats_page> {
       useRootNavigator: false,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: Text(
             '데이터를 추가합니다..',
             style: TextStyle(fontSize: 16,),
@@ -201,15 +201,74 @@ class _Stats_page extends State<Stats_page> {
       appBar: AppBar(
         title: Text('My Calendar'),
       ),
-      body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height*0.1,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.all(10),
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width*0.47-20,
+                    child: Column(
+                      children: [
+                        Text(
+                          '평균 생리기간',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          '${dur_days}',
+                          style: TextStyle(
+                              fontSize: 24
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                      height: 60,
+                      child: VerticalDivider(thickness: 2,)
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width*0.47-15,
+                    child:Column(
+                      children: [
+                        Text(
+                          '평균 생리주기',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          '${cycle_days}',
+                          style: TextStyle(
+                              fontSize: 24
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Expanded(
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(left:10, right: 10, bottom: 10),
               child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
                 child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
@@ -223,7 +282,7 @@ class _Stats_page extends State<Stats_page> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '  •  ' + period_list[3*index] + ' ~ ' + period_list[3*index+1],
+                              ' • ' + period_list[3*index] + ' ~ ' + period_list[3*index+1],
                               style: TextStyle(
                                 fontSize: 14,
                               ),
@@ -256,7 +315,7 @@ class _Stats_page extends State<Stats_page> {
                                               int.parse(period_list[3*(index)].substring(5,7)),
                                               int.parse(period_list[3*(index)].substring(8,10))
                                           )
-                                      ).inDays / 8) : MediaQuery.of(context).size.width - 30 ),
+                                      ).inDays / 8) : MediaQuery.of(context).size.width - 50 ),
                                   percent: 1,
                                   lineHeight: 20.0,
                                   barRadius: Radius.circular(10),
@@ -304,24 +363,23 @@ class _Stats_page extends State<Stats_page> {
                                               int.parse(period_list[3*(index)].substring(5,7)),
                                               int.parse(period_list[3*(index)].substring(8,10))
                                           )
-                                      ).inDays / 8 ) + MediaQuery.of(context).size.width * 0.10 : MediaQuery.of(context).size.width - 30
+                                      ).inDays / 8 ) + MediaQuery.of(context).size.width * 0.10 : MediaQuery.of(context).size.width - 50
                                   )
                                   ),
-                                  child: Center(
-                                    child: Text(
-                                      index == 0 ? cycle_days.toString() :
-                                      DateTime.utc(
-                                          int.parse(period_list[3*(index-1)].substring(0,4)),
-                                          int.parse(period_list[3*(index-1)].substring(5,7)),
-                                          int.parse(period_list[3*(index-1)].substring(8,10))
-                                      ).difference(
-                                          DateTime.utc(
-                                              int.parse(period_list[3*(index)].substring(0,4)),
-                                              int.parse(period_list[3*(index)].substring(5,7)),
-                                              int.parse(period_list[3*(index)].substring(8,10))
-                                          )
-                                      ).inDays.toString(),
-                                    ),
+                                  child: Text(
+                                    index == 0 ? cycle_days.toString() :
+                                    DateTime.utc(
+                                        int.parse(period_list[3*(index-1)].substring(0,4)),
+                                        int.parse(period_list[3*(index-1)].substring(5,7)),
+                                        int.parse(period_list[3*(index-1)].substring(8,10))
+                                    ).difference(
+                                        DateTime.utc(
+                                            int.parse(period_list[3*(index)].substring(0,4)),
+                                            int.parse(period_list[3*(index)].substring(5,7)),
+                                            int.parse(period_list[3*(index)].substring(8,10))
+                                        )
+                                    ).inDays.toString(),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               ],
@@ -333,10 +391,11 @@ class _Stats_page extends State<Stats_page> {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
         iconSize: 24,
         selectedItemColor: const Color(0xFFF48FB1),
@@ -384,9 +443,9 @@ class _Stats_page extends State<Stats_page> {
         Icons.add,
         size: 30,
       ),
-
       foregroundColor: Colors.white,
       backgroundColor: const Color(0xFFF48FB1),
+
     );
   }
 }
