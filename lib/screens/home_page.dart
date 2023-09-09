@@ -116,97 +116,105 @@ class _HomePageState extends State<HomePage> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.all(15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 30),
-                  Container(
-                    child: CircularPercentIndicator(
-                      radius: MediaQuery.of(context).size.width*0.25,
-                      lineWidth: 6.0,
-                      percent: (cycle_days-left_days)/cycle_days,
-                      center: Container(
-                        padding: EdgeInsets.all(15),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'D-${left_days}',
-                              style: TextStyle(
-                                fontSize: 32
-                              ),
-                            ),
-                            Divider(
-                              thickness: 2,
-                            ),
-                            Text(
-                              '다음 생리일',
-                              style: TextStyle(
-                                  fontSize: 16
-                              ),
-                            ),
-                            Text(
-                              DateFormat('yyyy.MM.dd').format(predict_days[0]),
-                              style: TextStyle(
-                                  fontSize: 14
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      progressColor: const Color(0xFFF48FB1),
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width*0.47-15,
+              padding: EdgeInsets.all(10),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 30),
+                    Container(
+                      child: CircularPercentIndicator(
+                        radius: MediaQuery.of(context).size.width*0.25,
+                        lineWidth: 6.0,
+                        percent: (cycle_days-left_days)/cycle_days,
+                        center: Container(
+                          padding: EdgeInsets.all(15),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                '임신확률',
+                                'D-${left_days}',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 32
+                                ),
+                              ),
+                              Divider(
+                                thickness: 2,
+                              ),
+                              Text(
+                                '다음 생리일',
+                                style: TextStyle(
+                                    fontSize: 16
                                 ),
                               ),
                               Text(
-                                possibility,
+                                DateFormat('yyyy.MM.dd').format(predict_days[0]),
                                 style: TextStyle(
-                                  fontSize: 24
+                                    fontSize: 14
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        Container(
-                          height: 60,
-                          child: VerticalDivider(thickness: 2,)
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width*0.47-15,
-                          child: Center(
-                            child: Text(
-                              day_check == true ? '가임기' : '비가임기',
-                              style: TextStyle(
-                                  fontSize: 24
+                        progressColor: const Color(0xFFF48FB1),
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.47-15,
+                            child: Column(
+                              children: [
+                                Text(
+                                  '임신확률',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  possibility,
+                                  style: TextStyle(
+                                    fontSize: 24
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 60,
+                            child: VerticalDivider(thickness: 2,)
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.47-15,
+                            child: Center(
+                              child: Text(
+                                day_check == true ? '가임기' : '비가임기',
+                                style: TextStyle(
+                                    fontSize: 24
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
         iconSize: 24,
         selectedItemColor: const Color(0xFFF48FB1),
