@@ -17,8 +17,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Calendar Diary App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFF48FB1),).copyWith(background: Colors.grey[400])
       ),
       home: LoadingPage(),
     );
