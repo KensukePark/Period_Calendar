@@ -202,173 +202,97 @@ class _Stats_page extends State<Stats_page> {
         title: Text('My Calendar'),
       ),
       body: SingleChildScrollView(
+        primary: true,
         child:
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.only(left:10, right: 10, bottom: 10),
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(top: 10, bottom: 10),
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width*0.47-20,
-                            child: Column(
-                              children: [
-                                Text(
-                                  '평균 생리기간',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  '${dur_days}',
-                                  style: TextStyle(
-                                      fontSize: 24
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                              height: 60,
-                              child: VerticalDivider(thickness: 2,)
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width*0.47-15,
-                            child:Column(
-                              children: [
-                                Text(
-                                  '평균 생리주기',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  '${cycle_days}',
-                                  style: TextStyle(
-                                      fontSize: 24
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
+          Container(
+            padding: EdgeInsets.only(left:10, right: 10, bottom: 10),
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                  child: Container(
+                    padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white,
                     ),
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: widget.period_list.length ~/ 3,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 70,
-                            padding: EdgeInsets.all(15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  ' • ' + period_list[3*index] + ' ~ ' + period_list[3*index+1],
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width*0.47-20,
+                          child: Column(
+                            children: [
+                              Text(
+                                '평균 생리기간',
+                                style: TextStyle(
+                                  fontSize: 16,
                                 ),
-                                Stack(
-                                  children: [
-                                    LinearPercentIndicator( //다음 생리까지 소요일 막대바
-                                      width: index == 0 ? (cycle_days <= 35 ? MediaQuery.of(context).size.width * 0.20 * (cycle_days / 8) :
-                                      MediaQuery.of(context).size.width - 30 ) : (
-                                          DateTime.utc(
-                                              int.parse(period_list[3*(index-1)].substring(0,4)),
-                                              int.parse(period_list[3*(index-1)].substring(5,7)),
-                                              int.parse(period_list[3*(index-1)].substring(8,10))
-                                          ).difference(
-                                              DateTime.utc(
-                                                  int.parse(period_list[3*(index)].substring(0,4)),
-                                                  int.parse(period_list[3*(index)].substring(5,7)),
-                                                  int.parse(period_list[3*(index)].substring(8,10))
-                                              )
-                                          ).inDays <= 35 ?
-
-                                      (MediaQuery.of(context).size.width) * 0.2 * (
-                                          DateTime.utc(
-                                              int.parse(period_list[3*(index-1)].substring(0,4)),
-                                              int.parse(period_list[3*(index-1)].substring(5,7)),
-                                              int.parse(period_list[3*(index-1)].substring(8,10))
-                                          ).difference(
-                                              DateTime.utc(
-                                                  int.parse(period_list[3*(index)].substring(0,4)),
-                                                  int.parse(period_list[3*(index)].substring(5,7)),
-                                                  int.parse(period_list[3*(index)].substring(8,10))
-                                              )
-                                          ).inDays / 8) : MediaQuery.of(context).size.width - 50 ),
-                                      percent: 1,
-                                      lineHeight: 20.0,
-                                      barRadius: Radius.circular(10),
-                                      progressColor: Colors.grey,
-                                    ),
-                                    LinearPercentIndicator( //생리 기간 막대바
-                                      width: MediaQuery.of(context).size.width * 0.20,
-                                      percent: 1,
-                                      lineHeight: 20.0,
-                                      barRadius: Radius.circular(10),
-                                      progressColor: const Color(0xFFF48FB1),
-                                    ),
-                                    Container( //생리 기간 텍스트
-                                      width: MediaQuery.of(context).size.width * 0.20,
-                                      child: Center(
-                                        child: Text(
-                                          period_list[3*index+2],
-                                        ),
-                                      ),
-                                    ),
-                                    Container( //다음 생리까지 소요일 텍스트
-                                      width: (index == 0 ? (cycle_days <= 35 ?
-                                      MediaQuery.of(context).size.width * 0.20 * (cycle_days / 8) + MediaQuery.of(context).size.width * 0.10 :
-                                      MediaQuery.of(context).size.width
-                                      ) : (
-                                          DateTime.utc(
-                                              int.parse(period_list[3*(index-1)].substring(0,4)),
-                                              int.parse(period_list[3*(index-1)].substring(5,7)),
-                                              int.parse(period_list[3*(index-1)].substring(8,10))
-                                          ).difference(
-                                              DateTime.utc(
-                                                  int.parse(period_list[3*(index)].substring(0,4)),
-                                                  int.parse(period_list[3*(index)].substring(5,7)),
-                                                  int.parse(period_list[3*(index)].substring(8,10))
-                                              )
-                                          ).inDays <= 35 ?
-                                      (MediaQuery.of(context).size.width) * 0.20 * (
-                                          DateTime.utc(
-                                              int.parse(period_list[3*(index-1)].substring(0,4)),
-                                              int.parse(period_list[3*(index-1)].substring(5,7)),
-                                              int.parse(period_list[3*(index-1)].substring(8,10))
-                                          ).difference(
-                                              DateTime.utc(
-                                                  int.parse(period_list[3*(index)].substring(0,4)),
-                                                  int.parse(period_list[3*(index)].substring(5,7)),
-                                                  int.parse(period_list[3*(index)].substring(8,10))
-                                              )
-                                          ).inDays / 8 ) + MediaQuery.of(context).size.width * 0.10 : MediaQuery.of(context).size.width - 50
-                                      )
-                                      ),
-                                      child: Text(
-                                        index == 0 ? cycle_days.toString() :
+                              ),
+                              Text(
+                                '${dur_days}',
+                                style: TextStyle(
+                                    fontSize: 24
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                            height: 60,
+                            child: VerticalDivider(thickness: 2,)
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width*0.47-15,
+                          child:Column(
+                            children: [
+                              Text(
+                                '평균 생리주기',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text(
+                                '${cycle_days}',
+                                style: TextStyle(
+                                    fontSize: 24
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: widget.period_list.length ~/ 3,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 70,
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                ' • ' + period_list[3*index] + ' ~ ' + period_list[3*index+1],
+                                style: TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Stack(
+                                children: [
+                                  LinearPercentIndicator( //다음 생리까지 소요일 막대바
+                                    width: index == 0 ? (cycle_days <= 35 ? MediaQuery.of(context).size.width * 0.20 * (cycle_days / 8) :
+                                    MediaQuery.of(context).size.width - 30 ) : (
                                         DateTime.utc(
                                             int.parse(period_list[3*(index-1)].substring(0,4)),
                                             int.parse(period_list[3*(index-1)].substring(5,7)),
@@ -379,20 +303,95 @@ class _Stats_page extends State<Stats_page> {
                                                 int.parse(period_list[3*(index)].substring(5,7)),
                                                 int.parse(period_list[3*(index)].substring(8,10))
                                             )
-                                        ).inDays.toString(),
-                                        textAlign: TextAlign.center,
+                                        ).inDays <= 35 ?
+
+                                    (MediaQuery.of(context).size.width) * 0.2 * (
+                                        DateTime.utc(
+                                            int.parse(period_list[3*(index-1)].substring(0,4)),
+                                            int.parse(period_list[3*(index-1)].substring(5,7)),
+                                            int.parse(period_list[3*(index-1)].substring(8,10))
+                                        ).difference(
+                                            DateTime.utc(
+                                                int.parse(period_list[3*(index)].substring(0,4)),
+                                                int.parse(period_list[3*(index)].substring(5,7)),
+                                                int.parse(period_list[3*(index)].substring(8,10))
+                                            )
+                                        ).inDays / 8) : MediaQuery.of(context).size.width - 50 ),
+                                    percent: 1,
+                                    lineHeight: 20.0,
+                                    barRadius: Radius.circular(10),
+                                    progressColor: Colors.grey,
+                                  ),
+                                  LinearPercentIndicator( //생리 기간 막대바
+                                    width: MediaQuery.of(context).size.width * 0.20,
+                                    percent: 1,
+                                    lineHeight: 20.0,
+                                    barRadius: Radius.circular(10),
+                                    progressColor: const Color(0xFFF48FB1),
+                                  ),
+                                  Container( //생리 기간 텍스트
+                                    width: MediaQuery.of(context).size.width * 0.20,
+                                    child: Center(
+                                      child: Text(
+                                        period_list[3*index+2],
                                       ),
                                     ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          );
-                        }
-                    ),
+                                  ),
+                                  Container( //다음 생리까지 소요일 텍스트
+                                    width: (index == 0 ? (cycle_days <= 35 ?
+                                    MediaQuery.of(context).size.width * 0.20 * (cycle_days / 8) + MediaQuery.of(context).size.width * 0.10 :
+                                    MediaQuery.of(context).size.width
+                                    ) : (
+                                        DateTime.utc(
+                                            int.parse(period_list[3*(index-1)].substring(0,4)),
+                                            int.parse(period_list[3*(index-1)].substring(5,7)),
+                                            int.parse(period_list[3*(index-1)].substring(8,10))
+                                        ).difference(
+                                            DateTime.utc(
+                                                int.parse(period_list[3*(index)].substring(0,4)),
+                                                int.parse(period_list[3*(index)].substring(5,7)),
+                                                int.parse(period_list[3*(index)].substring(8,10))
+                                            )
+                                        ).inDays <= 35 ?
+                                    (MediaQuery.of(context).size.width) * 0.20 * (
+                                        DateTime.utc(
+                                            int.parse(period_list[3*(index-1)].substring(0,4)),
+                                            int.parse(period_list[3*(index-1)].substring(5,7)),
+                                            int.parse(period_list[3*(index-1)].substring(8,10))
+                                        ).difference(
+                                            DateTime.utc(
+                                                int.parse(period_list[3*(index)].substring(0,4)),
+                                                int.parse(period_list[3*(index)].substring(5,7)),
+                                                int.parse(period_list[3*(index)].substring(8,10))
+                                            )
+                                        ).inDays / 8 ) + MediaQuery.of(context).size.width * 0.10 : MediaQuery.of(context).size.width - 50
+                                    )
+                                    ),
+                                    child: Text(
+                                      index == 0 ? cycle_days.toString() :
+                                      DateTime.utc(
+                                          int.parse(period_list[3*(index-1)].substring(0,4)),
+                                          int.parse(period_list[3*(index-1)].substring(5,7)),
+                                          int.parse(period_list[3*(index-1)].substring(8,10))
+                                      ).difference(
+                                          DateTime.utc(
+                                              int.parse(period_list[3*(index)].substring(0,4)),
+                                              int.parse(period_list[3*(index)].substring(5,7)),
+                                              int.parse(period_list[3*(index)].substring(8,10))
+                                          )
+                                      ).inDays.toString(),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      }
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
       ),
