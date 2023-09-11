@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import '../main.dart';
 import 'calendar_page.dart';
 import 'home_page.dart';
 
@@ -13,7 +11,6 @@ class Stats_page extends StatefulWidget {
   final period_list;
   final newest_day;
   final newest_end_day;
-
   @override
   State<Stats_page> createState() => _Stats_page();
 }
@@ -33,7 +30,9 @@ class _Stats_page extends State<Stats_page> {
   var compare_day;
   int cycle_days = 0; //평균 생리 주기 (다음번 생리까지의 소요일)
   int dur_days = 0; //평균 생리 기간 (지속일)
-  void load_data() async {
+
+  //데이터 로딩 함수
+ void load_data() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       period_list = prefs.getStringList('period')!;
@@ -43,6 +42,7 @@ class _Stats_page extends State<Stats_page> {
     });
   }
 
+  //생리 주기 및 생리 기간 계산 함수
   void CalDay() {
     if (widget.period_list.length == 3) {
       cycle_days = 28;
@@ -72,7 +72,7 @@ class _Stats_page extends State<Stats_page> {
     }
   }
 
-
+  //생리일 추가 함수
   void addData() async {
     final prefs = await SharedPreferences.getInstance();
     //prefs.clear(); //테스트용 생리 기록 초기화
@@ -155,6 +155,8 @@ class _Stats_page extends State<Stats_page> {
       },
     );
   }
+
+  //생리 데이터를 저장한 리스트를 정렬하는 함수
   void sort_period() {
     period_list = widget.period_list;
     newest_end_day = widget.newest_end_day;
